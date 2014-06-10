@@ -20,10 +20,12 @@ class AttributeCreatorListener
     /**
      * @Di\InjectParams({
      *     "schemaClassName" = @Di\Inject("%padam87.entities.schema%")
+     *     "attributeClassName" = @Di\Inject("%padam87.entities.attribute%")
      * })
      */
-    public function __construct($schemaClassName) {
+    public function __construct($schemaClassName, $attributeClassName) {
         $this->schemaClassName = $schemaClassName;
+        $this->attributeClassName = $attributeClassName;
     }
     
     public function postLoad(LifecycleEventArgs $eventArgs)
@@ -53,7 +55,7 @@ class AttributeCreatorListener
                         $attribute = $qb->getQuery()->getOneOrNullResult();
 
                         if ($attribute === null) {
-                            $attribute = new Attribute();
+                            $attribute = new $this->attributeClassName;
                             $attribute->setDefinition($definition);
 
                             $entity->addAttribute($attribute);
